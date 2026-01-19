@@ -1,0 +1,40 @@
+[
+  {
+    "date": "Thursday 12th February",
+    "events": [
+      { "time": "13:30", "venue": "EJC", "title": "Tony Levin Drum Prize - Jean Toussaint" },
+      { "time": "13:30", "venue": "Foyer", "title": "Salsa Orchestra" },
+      { "time": "14:00", "venue": "Organ Studio", "title": "Miles Davis Book Launch" },
+      { "time": "14:30", "venue": "Foyer", "title": "RJ Gilbert" },
+      { "time": "15:00", "venue": "Foyer", "title": "Ben Lewsis Skeath" },
+      { "time": "15:30", "venue": "Foyer", "title": "Poppy Baker" },
+      { "time": "16:00", "venue": "EJC", "title": "Digbeth Jazz - Dave Sear Sextet" },
+      { "time": "16:00", "venue": "Foyer", "title": "Rachel Towner" },
+      { "time": "16:30", "venue": "Foyer", "title": "NYJC" },
+      { "time": "17:00", "venue": "Foyer", "title": "Jamie Mcleish Hammond Jam" },
+      { "time": "17:30", "venue": "Recital Hall", "title": "Jazz Orch Porgy and Bess" },
+      { "time": "18:30", "venue": "EJC", "title": "Indo Jazz Fusion" },
+      { "time": "19:30", "venue": "Bradshaw Hall", "title": "Chris Potter and Pablo Held Trio" }
+    ]
+  },
+  {
+    "date": "Friday 13th February",
+    "events": [
+      { "time": "10:30", "venue": "EJC", "title": "Festivals in Focus Symposium" },
+      { "time": "13:30", "venue": "EJC", "title": "Senior Student Double Bill: Ben Shankland / Macy Wright" },
+      { "time": "13:30", "venue": "Foyer", "title": "BCU Voices" },
+      { "time": "14:30", "venue": "Foyer", "title": "Freddie Dal" },
+      { "time": "15:00", "venue": "Recital Hall", "title": "BJO" },
+      { "time": "15:00", "venue": "Foyer", "title": "Kyle Welch" },
+      { "time": "15:30", "venue": "Foyer", "title": "Ben Pond" },
+      { "time": "16:00", "venue": "Foyer", "title": "Josh Bailey" },
+      { "time": "16:30", "venue": "EJC", "title": "Rebecca Nash Trio" },
+      { "time": "16:30", "venue": "Foyer", "title": "RBC Juniors" },
+      { "time": "17:00", "venue": "Foyer", "title": "Jamie Mcleish Hammond Jam" },
+      { "time": "17:30", "venue": "Recital Hall", "title": "TDE Promo - Olie Brice" },
+      { "time": "18:00", "venue": "EJC", "title": "Switch" },
+      { "time": "18:30", "venue": "EJC", "title": "Digbeth Jam" },
+      { "time": "19:30", "venue": "Bradshaw Hall", "title": "BBC Big Band" }
+    ]
+  }
+]
