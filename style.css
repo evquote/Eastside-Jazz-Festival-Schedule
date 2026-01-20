@@ -1,159 +1,92 @@
 :root {
-    /* RBC / BCU Brand Palette */
-    --rbc-blue: #010f4E;       /* Deep Navy */
-    --rbc-gold: #BDA315;       /* Gold */
-    --rbc-cyan: #00ADEF;       /* Bright Blue */
-    --rbc-grey: #f4f4f4;       /* Light Grey for text */
-    --card-bg: #0b1a5e;        /* Slightly lighter blue for cards */
-    --text-white: #ffffff;
+    --primary: #f4a261;
+    --bg: #1a1a1d;
+    --card-bg: #2b2b2e;
+    --text: #ffffff;
+    --accent: #e76f51;
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: var(--rbc-blue);
-    color: var(--text-white);
+    background-color: var(--bg);
+    color: var(--text);
     margin: 0;
     padding: 0;
-    padding-bottom: 50px;
 }
 
 header {
     text-align: center;
-    padding: 30px 20px;
-    background: linear-gradient(135deg, #000000 0%, var(--rbc-blue) 100%);
-    border-bottom: 2px solid var(--rbc-gold);
-}
-
-header h1 {
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 1.8rem;
-    color: var(--text-white);
-}
-
-header p {
-    margin: 5px 0 0;
-    color: var(--rbc-gold);
-    font-weight: 600;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
-
-/* Sticky Header for Tabs & Sort */
-#sticky-header {
-    position: sticky;
-    top: 0;
-    background-color: var(--rbc-blue);
-    z-index: 100;
-    padding-bottom: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    padding: 20px;
+    background: linear-gradient(45deg, #000, #333);
+    border-bottom: 4px solid var(--primary);
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    padding: 15px 0;
+    gap: 10px;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    background-color: var(--bg);
+    z-index: 100;
 }
 
 .tab-btn {
-    padding: 8px 20px;
-    border: 1px solid var(--rbc-gold);
-    background: transparent;
-    color: var(--rbc-gold);
+    padding: 10px 20px;
+    border: none;
+    background: var(--card-bg);
+    color: var(--text);
     font-weight: bold;
     cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.9rem;
+    border-radius: 20px;
     transition: 0.3s;
 }
 
 .tab-btn.active {
-    background: var(--rbc-gold);
-    color: var(--rbc-blue);
-}
-
-.controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
-}
-
-.label {
-    font-size: 0.8rem;
-    color: #ccc;
-    text-transform: uppercase;
-}
-
-.sort-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.sort-btn.active {
-    color: var(--text-white);
-    background-color: var(--rbc-cyan);
+    background: var(--primary);
+    color: #000;
 }
 
 #schedule-container {
-    max-width: 700px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
 }
 
 .event-card {
     background-color: var(--card-bg);
     margin-bottom: 15px;
-    padding: 20px;
-    border-left: 4px solid var(--rbc-gold);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid var(--accent);
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .event-time {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--rbc-cyan);
-    min-width: 80px;
-    text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.1);
-    padding-right: 15px;
-    margin-right: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+    min-width: 70px;
 }
 
 .event-details {
     flex-grow: 1;
+    padding-left: 15px;
 }
 
 .event-title {
     font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 5px 0;
-    color: var(--text-white);
+    font-weight: bold;
+    margin: 0;
 }
 
 .event-venue {
-    font-size: 0.85rem;
-    color: var(--rbc-gold);
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 5px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-weight: 600;
-}
-
-footer {
-    text-align: center;
-    padding: 40px;
-    font-size: 0.8rem;
-    color: #666;
 }
