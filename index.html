@@ -5,27 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eastside Jazz Festival</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <header>
         <div class="hero">
-            <h1>Eastside Jazz Festival 2026</h1>
-            <p>Festival Schedule</p>
+            <h1>Eastside Jazz Festival</h1>
+            <p>2025 Live Schedule</p>
         </div>
     </header>
 
     <div id="sticky-nav">
-        <div id="day-tabs" class="tabs">
+        <div id="day-tabs" class="tabs"></div>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search artist or venue...">
             </div>
+            
+            <button id="fav-toggle" class="fav-toggle-btn">
+                <i class="fa-regular fa-star"></i> My Schedule
+            </button>
+        </div>
     </div>
 
     <main id="schedule-container">
         </main>
 
+    <div id="empty-state" class="hidden">
+        <p>No events found.</p>
+    </div>
+
     <footer>
-        <p>Schedule subject to change.</p>
+        <p>Tap the <i class="fa-regular fa-star"></i> to build your own schedule.</p>
     </footer>
 
     <script src="script.js"></script>
