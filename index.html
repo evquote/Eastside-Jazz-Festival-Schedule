@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eastside Jazz Festival Schedule</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <h1>Eastside Jazz Festival</h1>
-        <p>Live Schedule</p>
+        <div class="logo-area">
+            <h1>Eastside Jazz Festival</h1>
+            <p>Royal Birmingham Conservatoire</p>
+        </div>
     </header>
 
-    <div id="day-tabs" class="tabs">
+    <div id="sticky-header">
+        <div id="day-tabs" class="tabs">
+            </div>
+
+        <div class="controls">
+            <span class="label">Sort by:</span>
+            <button id="sort-time" class="sort-btn active">Time</button>
+            <button id="sort-venue" class="sort-btn">Venue</button>
         </div>
+    </div>
 
     <main id="schedule-container">
         </main>
+
+    <footer>
+        <p>&copy; 2025 Royal Birmingham Conservatoire</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
