@@ -1,12 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('schedule-container');
     const tabsContainer = document.getElementById('day-tabs');
-    const sortTimeBtn = document.getElementById('sort-time');
-    const sortVenueBtn = document.getElementById('sort-venue');
 
     let allData = [];
     let currentDayIndex = 0;
-    let currentSortMode = 'time'; // 'time' or 'venue'
 
     // Fetch the JSON data
     fetch('schedule.json')
@@ -25,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allData.forEach((day, index) => {
             const btn = document.createElement('button');
             btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-            // Simplify date for mobile tabs if needed, or keep full
+            // Simplify date to "Thu 12th Feb" format if desired, or keep raw
             btn.innerText = day.date.replace("February", "Feb"); 
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -36,26 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabsContainer.appendChild(btn);
         });
 
-        // Setup Sort Buttons
-        sortTimeBtn.addEventListener('click', () => setSortMode('time'));
-        sortVenueBtn.addEventListener('click', () => setSortMode('venue'));
-
         // Render initial view
-        renderEvents();
-    }
-
-    function setSortMode(mode) {
-        currentSortMode = mode;
-        
-        // Update Button Styles
-        if (mode === 'time') {
-            sortTimeBtn.classList.add('active');
-            sortVenueBtn.classList.remove('active');
-        } else {
-            sortVenueBtn.classList.add('active');
-            sortTimeBtn.classList.remove('active');
-        }
-        
         renderEvents();
     }
 
@@ -65,16 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Get events for current day
         let events = [...allData[currentDayIndex].events];
 
-        // Apply Sorting
-        if (currentSortMode === 'time') {
-            events.sort((a, b) => a.time.localeCompare(b.time));
-        } else {
-            events.sort((a, b) => {
-                if (a.venue < b.venue) return -1;
-                if (a.venue > b.venue) return 1;
-                return a.time.localeCompare(b.time);
-            });
-        }
+        // ALWAYS Sort by Time
+        events.sort((a, b) => a.time.localeCompare(b.time));
 
         // Generate HTML
         events.forEach(event => {
