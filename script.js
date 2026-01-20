@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error loading schedule:', error);
-            container.innerHTML = '<p>Error loading schedule.</p>';
+            container.innerHTML = '<p style="text-align:center; color: #888;">Unable to load schedule.</p>';
         });
 
     function initSchedule() {
@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
         allData.forEach((day, index) => {
             const btn = document.createElement('button');
             btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-            btn.innerText = day.date; // e.g. "Thursday 12th"
+            // Simplify date for mobile tabs if needed, or keep full
+            btn.innerText = day.date.replace("February", "Feb"); 
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -36,12 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Setup Sort Buttons
-        sortTimeBtn.addEventListener('click', () => {
-            setSortMode('time');
-        });
-        sortVenueBtn.addEventListener('click', () => {
-            setSortMode('venue');
-        });
+        sortTimeBtn.addEventListener('click', () => setSortMode('time'));
+        sortVenueBtn.addEventListener('click', () => setSortMode('venue'));
 
         // Render initial view
         renderEvents();
@@ -50,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setSortMode(mode) {
         currentSortMode = mode;
         
-        // Update UI classes
+        // Update Button Styles
         if (mode === 'time') {
             sortTimeBtn.classList.add('active');
             sortVenueBtn.classList.remove('active');
@@ -70,14 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Apply Sorting
         if (currentSortMode === 'time') {
-            // Sort by Time
             events.sort((a, b) => a.time.localeCompare(b.time));
         } else {
-            // Sort by Venue, then by Time
             events.sort((a, b) => {
                 if (a.venue < b.venue) return -1;
                 if (a.venue > b.venue) return 1;
-                return a.time.localeCompare(b.time); // If venue is same, sort by time
+                return a.time.localeCompare(b.time);
             });
         }
 
