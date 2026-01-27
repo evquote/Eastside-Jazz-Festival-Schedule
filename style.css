@@ -176,17 +176,19 @@ header p {
     box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
 }
 
-.event-time-box {
-    text-align: center;
-    min-width: 60px;
-    margin-right: 15px;
-}
-
 .event-time {
-    font-size: 1.2rem;
+    font-size: 0.95rem; /* Reduced from 1.2rem to fit the range */
     font-weight: 800;
     color: var(--accent);
     display: block;
+    line-height: 1.2;
+    white-space: nowrap; /* Keeps time on one line if possible */
+}
+
+.event-time-box {
+    text-align: center;
+    min-width: 90px; /* Increased width to accommodate range */
+    margin-right: 15px;
 }
 
 .live-badge {
