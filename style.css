@@ -2,7 +2,6 @@
     --bg-color: #121212;
     --card-bg: #1e1e1e;
     --accent: #d4af37; /* Gold */
-    --accent-glow: rgba(212, 175, 55, 0.3);
     --text-main: #ffffff;
     --text-muted: #a0a0a0;
     --live-red: #ff4757;
@@ -89,7 +88,7 @@ header p {
     background-color: var(--accent);
 }
 
-/* --- Toolbar (Search & Favs) --- */
+/* --- Toolbar --- */
 .toolbar {
     display: flex;
     gap: 10px;
@@ -116,7 +115,7 @@ header p {
     background-color: #2c2c2c;
     border: 1px solid #444;
     border-radius: 20px;
-    padding: 10px 10px 10px 35px; /* space for icon */
+    padding: 10px 10px 10px 35px;
     color: white;
     font-family: 'Montserrat', sans-serif;
     outline: none;
@@ -149,7 +148,7 @@ header p {
     border-color: var(--accent);
 }
 
-/* --- Schedule List --- */
+/* --- Cards --- */
 #schedule-container {
     max-width: 600px;
     margin: 0 auto;
@@ -159,26 +158,22 @@ header p {
 .event-card {
     background-color: var(--card-bg);
     border-radius: var(--border-radius);
-    padding: 15px 20px;
     margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    transition: transform 0.2s;
     border-left: 4px solid transparent;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: pointer;
 }
 
-/* "On Now" Status Style */
+.card-main {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+}
+
 .event-card.live-now {
     border-left: 4px solid var(--live-red);
     box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
 }
 
 .event-time-box {
@@ -224,14 +219,18 @@ header p {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    /* Removed cursor: pointer and text-decoration */
 }
 
 .event-venue i {
     margin-right: 4px;
 }
 
-/* Star Button */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .star-btn {
     background: none;
     border: none;
@@ -242,28 +241,62 @@ header p {
     transition: transform 0.2s;
 }
 
-.star-btn:active {
-    transform: scale(1.3);
-}
-
 .star-btn.active {
     color: var(--accent);
 }
 
-.hidden {
-    display: none;
-}
-
-#empty-state {
-    text-align: center;
+.expand-icon {
     color: #666;
-    padding: 40px;
-    font-style: italic;
+    transition: transform 0.3s ease;
 }
 
-footer {
-    text-align: center;
-    padding: 40px;
-    color: #555;
+/* --- Expanded Content --- */
+.card-expanded {
+    background-color: #252525;
+    border-top: 1px solid #333;
+    animation: slideDown 0.3s ease-out;
+}
+
+.expanded-content {
+    padding: 15px 20px;
+}
+
+.event-desc {
+    margin: 0 0 15px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #ddd;
+}
+
+.info-btn {
+    display: inline-block;
+    background-color: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.info-btn:hover {
+    background-color: var(--accent);
+    color: #121212;
+}
+
+.info-btn i {
+    margin-left: 5px;
     font-size: 0.8rem;
+}
+
+.hidden { display: none; }
+#empty-state { text-align: center; color: #666; padding: 40px; font-style: italic; }
+
+footer { text-align: center; padding: 40px; color: #555; font-size: 0.8rem; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
