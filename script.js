@@ -23,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('schedule.json')
         .then(response => response.json())
         .then(data => {
-            // Transform flat list into grouped days
             allData = groupEventsByDay(data);
-            
             if(allData.length > 0) {
                 initTabs();
                 renderEvents();
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             groups[event.date].push(event);
         });
         
-        // Convert to array format expected by renderer
         return Object.keys(groups).map(date => {
             return {
                 date: date,
@@ -118,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filteredEvents.forEach((event, index) => {
             const isFav = favorites.includes(event.title);
-            const isLive = checkIsLive(allData[currentDayIndex].date, event.time);
+            const isLive = checkIsLive(allData[currentDayIndex].date, event.time, event.end_time);
             
             const hasDetails = (event.description && event.description !== "") || (event.link && event.link !== "");
             const uniqueId = `event-${index}`;
@@ -145,10 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.style.cursor = "default";
             }
             
+            // Format Time Range (e.g., 14:00 - 15:00)
+            const timeDisplay = event.end_time ? `${event.time} - ${event.end_time}` : event.time;
+
             card.innerHTML = `
                 <div class="card-main">
                     <div class="event-time-box">
-                        <span class="event-time">${event.time}</span>
+                        <span class="event-time">${timeDisplay}</span>
                         ${isLive ? '<span class="live-badge">LIVE</span>' : ''}
                     </div>
                     
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderEvents();
     };
 
-    function checkIsLive(dateStr, timeStr) {
+    function checkIsLive(dateStr, timeStr, endTimeStr) {
         let now = new Date();
         if (SIMULATE_FESTIVAL) {
             now = new Date(`${SIMULATED_DATE}T${SIMULATED_TIME}:00`);
@@ -202,13 +202,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-        const [eventHour, eventMin] = timeStr.split(':').map(Number);
-        const eventDateObj = new Date(now);
-        eventDateObj.setHours(eventHour, eventMin, 0);
+        const [startHour, startMin] = timeStr.split(':').map(Number);
+        const startDate = new Date(now);
+        startDate.setHours(startHour, startMin, 0);
 
-        const eventEndObj = new Date(eventDateObj);
-        eventEndObj.setMinutes(eventEndObj.getMinutes() + 60);
+        let endDate = new Date(startDate);
+        if (endTimeStr) {
+            const [endHour, endMin] = endTimeStr.split(':').map(Number);
+            endDate.setHours(endHour, endMin, 0);
+        } else {
+            // Default 1 hour if no end time
+            endDate.setMinutes(endDate.getMinutes() + 60);
+        }
 
-        return now >= eventDateObj && now < eventEndObj;
+        return now >= startDate && now < endDate;
     }
 });
