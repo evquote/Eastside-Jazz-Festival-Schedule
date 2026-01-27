@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
-    // Set to TRUE to test the "Live Now" features today. 
-    // Set to FALSE for the actual festival.
-    const SIMULATE_FESTIVAL = false; 
-    const SIMULATED_DATE = "2025-02-12"; // Simulating the first day
-    const SIMULATED_TIME = "15:45";      // Simulating 3:45 PM
+    const CSV_FILE_URL = "schedule.csv"; 
+    
+    // Set to FALSE for the actual festival
+    const SIMULATE_FESTIVAL = true; 
+    const SIMULATED_DATE = "2025-02-12"; 
+    const SIMULATED_TIME = "15:45";      
 
     // --- DOM ELEMENTS ---
     const container = document.getElementById('schedule-container');
@@ -16,26 +17,70 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- STATE ---
     let allData = [];
     let currentDayIndex = 0;
-    let favorites = JSON.parse(localStorage.getItem('jazzFestFavorites')) || []; // Load saved favs
+    let favorites = JSON.parse(localStorage.getItem('jazzFestFavorites')) || [];
     let showFavoritesOnly = false;
 
     // --- INITIALIZATION ---
-    fetch('schedule.json')
-        .then(res => res.json())
-        .then(data => {
-            allData = data;
-            initTabs();
-            renderEvents();
+    fetch(CSV_FILE_URL)
+        .then(response => response.text())
+        .then(csvText => {
+            allData = parseCSV(csvText);
+            if(allData.length > 0) {
+                initTabs();
+                renderEvents();
+            } else {
+                container.innerHTML = '<p style="text-align:center;">No events found.</p>';
+            }
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error('Error loading schedule:', err);
+            container.innerHTML = '<p style="text-align:center;">Unable to load schedule.</p>';
+        });
+
+    // --- CSV PARSER ---
+    function parseCSV(csvText) {
+        const rows = csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
+        const rawEvents = [];
+
+        // Skip Header
+        for (let i = 1; i < rows.length; i++) {
+            // Regex to split by comma ONLY if not inside quotes
+            const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            
+            if (columns.length >= 4) {
+                const clean = (txt) => txt ? txt.replace(/^"|"$/g, '').trim() : "";
+
+                rawEvents.push({ 
+                    date: clean(columns[0]),
+                    time: clean(columns[1]),
+                    venue: clean(columns[2]),
+                    title: clean(columns[3]),
+                    description: clean(columns[4]), // Can be empty
+                    link: clean(columns[5])         // Can be empty
+                });
+            }
+        }
+
+        const groupedData = [];
+        const uniqueDates = [...new Set(rawEvents.map(e => e.date))];
+
+        uniqueDates.forEach(date => {
+            if(date) {
+                groupedData.push({
+                    date: date,
+                    events: rawEvents.filter(e => e.date === date)
+                });
+            }
+        });
+
+        return groupedData;
+    }
 
     // --- EVENT LISTENERS ---
     searchInput.addEventListener('input', renderEvents);
     
     favToggleBtn.addEventListener('click', () => {
         showFavoritesOnly = !showFavoritesOnly;
-        
-        // Update Button Style
         if (showFavoritesOnly) {
             favToggleBtn.classList.add('active');
             favToggleBtn.innerHTML = `<i class="fa-solid fa-star"></i> Show All`;
@@ -46,14 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderEvents();
     });
 
-    // --- FUNCTIONS ---
-
+    // --- RENDER FUNCTIONS ---
     function initTabs() {
         tabsContainer.innerHTML = '';
         allData.forEach((day, index) => {
             const btn = document.createElement('button');
             btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-            btn.innerText = day.date.replace("February", "Feb"); 
+            let shortDate = day.date;
+            try {
+                 shortDate = day.date.replace("February", "Feb").split(',')[0] + " " + day.date.match(/\d+(st|nd|rd|th)/)[0];
+            } catch(e) {}
+            btn.innerText = shortDate;
+            
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -67,12 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderEvents() {
         container.innerHTML = '';
         const searchTerm = searchInput.value.toLowerCase();
-        let events = [...allData[currentDayIndex].events];
+        
+        if (!allData[currentDayIndex]) return;
 
-        // 1. Sort by Time
+        let events = [...allData[currentDayIndex].events];
         events.sort((a, b) => a.time.localeCompare(b.time));
 
-        // 2. Filter (Search & Favorites)
         const filteredEvents = events.filter(event => {
             const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
                                   event.venue.toLowerCase().includes(searchTerm);
@@ -80,43 +129,76 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchesSearch && matchesFav;
         });
 
-        // 3. Handle Empty State
         if (filteredEvents.length === 0) {
             emptyState.classList.remove('hidden');
         } else {
             emptyState.classList.add('hidden');
         }
 
-        // 4. Generate Cards
-        filteredEvents.forEach(event => {
+        filteredEvents.forEach((event, index) => {
             const isFav = favorites.includes(event.title);
             const isLive = checkIsLive(allData[currentDayIndex].date, event.time);
             
+            // KEY CHANGE: Check if description OR link exists
+            const hasDetails = (event.description && event.description !== "") || (event.link && event.link !== "");
+            const uniqueId = `event-${index}`;
+
             const card = document.createElement('div');
             card.className = `event-card ${isLive ? 'live-now' : ''}`;
             
+            if (hasDetails) {
+                card.onclick = (e) => {
+                    if(e.target.closest('.star-btn') || e.target.closest('.info-btn')) return;
+                    
+                    const detailsDiv = document.getElementById(uniqueId);
+                    const icon = card.querySelector('.expand-icon');
+                    
+                    if (detailsDiv.style.display === "block") {
+                        detailsDiv.style.display = "none";
+                        icon.style.transform = "rotate(0deg)";
+                    } else {
+                        detailsDiv.style.display = "block";
+                        icon.style.transform = "rotate(180deg)";
+                    }
+                };
+            } else {
+                // If no details, change cursor to default
+                card.style.cursor = "default";
+            }
+            
             card.innerHTML = `
-                <div class="event-time-box">
-                    <span class="event-time">${event.time}</span>
-                    ${isLive ? '<span class="live-badge">LIVE</span>' : ''}
-                </div>
-                
-                <div class="event-details">
-                    <h3 class="event-title">${event.title}</h3>
-                    <div class="event-venue">
-                        <i class="fa-solid fa-location-dot"></i> ${event.venue}
+                <div class="card-main">
+                    <div class="event-time-box">
+                        <span class="event-time">${event.time}</span>
+                        ${isLive ? '<span class="live-badge">LIVE</span>' : ''}
+                    </div>
+                    
+                    <div class="event-details">
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-venue">
+                            <i class="fa-solid fa-location-dot"></i> ${event.venue}
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="star-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${event.title}')">
+                            <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                        </button>
+                        ${hasDetails ? '<i class="fa-solid fa-chevron-down expand-icon"></i>' : ''}
                     </div>
                 </div>
 
-                <button class="star-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${event.title}')">
-                    <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star"></i>
-                </button>
+                <div id="${uniqueId}" class="card-expanded" style="display: none;">
+                    <div class="expanded-content">
+                        ${event.description ? `<p class="event-desc">${event.description}</p>` : ''}
+                        ${event.link ? `<a href="${event.link}" target="_blank" class="info-btn">View Full Event Details <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                    </div>
+                </div>
             `;
             container.appendChild(card);
         });
     }
 
-    // Global function for onclick access
     window.toggleFavorite = (title) => {
         if (favorites.includes(title)) {
             favorites = favorites.filter(t => t !== title);
@@ -124,19 +206,19 @@ document.addEventListener('DOMContentLoaded', () => {
             favorites.push(title);
         }
         localStorage.setItem('jazzFestFavorites', JSON.stringify(favorites));
-        renderEvents(); // Re-render to update icon state
+        renderEvents();
     };
 
-    // Helper: Check if event is happening "now"
     function checkIsLive(dateStr, timeStr) {
         let now = new Date();
-        
         if (SIMULATE_FESTIVAL) {
             now = new Date(`${SIMULATED_DATE}T${SIMULATED_TIME}:00`);
         }
-
-        const eventDay = dateStr.match(/\d+/)[0]; 
         
+        const eventDayMatch = dateStr.match(/\d+/);
+        if(!eventDayMatch) return false;
+        const eventDay = parseInt(eventDayMatch[0]);
+
         if (now.getDate() != eventDay || now.getMonth() !== 1 || now.getFullYear() !== 2025) {
             return false;
         }
