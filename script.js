@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
     
+    // Set to TRUE to test the "Live Now" feature (Simulating Feb 12th 2026)
     // Set to FALSE for the actual festival
     const SIMULATE_FESTIVAL = true; 
-    const SIMULATED_DATE = "2025-02-12"; 
-    const SIMULATED_TIME = "15:45";      
+    const SIMULATED_DATE = "2026-02-12"; 
+    const SIMULATED_TIME = "14:15";      
 
     // --- DOM ELEMENTS ---
     const container = document.getElementById('schedule-container');
@@ -75,11 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
         allData.forEach((day, index) => {
             const btn = document.createElement('button');
             btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-            let shortDate = day.date;
-            try {
-                 shortDate = day.date.replace("February", "Feb").split(',')[0] + " " + day.date.match(/\d+(st|nd|rd|th)/)[0];
-            } catch(e) {}
-            btn.innerText = shortDate;
+            
+            // Use the full date string exactly as it appears in JSON
+            btn.innerText = day.date;
             
             btn.onclick = () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -198,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!eventDayMatch) return false;
         const eventDay = parseInt(eventDayMatch[0]);
 
-        if (now.getDate() != eventDay || now.getMonth() !== 1 || now.getFullYear() !== 2025) {
+        // Updated for Year 2026
+        if (now.getDate() != eventDay || now.getMonth() !== 1 || now.getFullYear() !== 2026) {
             return false;
         }
 
@@ -211,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const [endHour, endMin] = endTimeStr.split(':').map(Number);
             endDate.setHours(endHour, endMin, 0);
         } else {
-            // Default 1 hour if no end time
             endDate.setMinutes(endDate.getMinutes() + 60);
         }
 
