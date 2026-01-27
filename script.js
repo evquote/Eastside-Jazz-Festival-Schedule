@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
-    const CSV_FILE_URL = "schedule.csv"; 
     
     // Set to FALSE for the actual festival
     const SIMULATE_FESTIVAL = true; 
@@ -21,10 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let showFavoritesOnly = false;
 
     // --- INITIALIZATION ---
-    fetch(CSV_FILE_URL)
-        .then(response => response.text())
-        .then(csvText => {
-            allData = parseCSV(csvText);
+    fetch('schedule.json')
+        .then(response => response.json())
+        .then(data => {
+            // Transform flat list into grouped days
+            allData = groupEventsByDay(data);
+            
             if(allData.length > 0) {
                 initTabs();
                 renderEvents();
@@ -37,43 +38,23 @@ document.addEventListener('DOMContentLoaded', () => {
             container.innerHTML = '<p style="text-align:center;">Unable to load schedule.</p>';
         });
 
-    // --- CSV PARSER ---
-    function parseCSV(csvText) {
-        const rows = csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
-        const rawEvents = [];
-
-        // Skip Header
-        for (let i = 1; i < rows.length; i++) {
-            // Regex to split by comma ONLY if not inside quotes
-            const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            
-            if (columns.length >= 4) {
-                const clean = (txt) => txt ? txt.replace(/^"|"$/g, '').trim() : "";
-
-                rawEvents.push({ 
-                    date: clean(columns[0]),
-                    time: clean(columns[1]),
-                    venue: clean(columns[2]),
-                    title: clean(columns[3]),
-                    description: clean(columns[4]), // Can be empty
-                    link: clean(columns[5])         // Can be empty
-                });
+    // --- HELPER: Group Flat JSON by Date ---
+    function groupEventsByDay(flatEvents) {
+        const groups = {};
+        flatEvents.forEach(event => {
+            if (!groups[event.date]) {
+                groups[event.date] = [];
             }
-        }
-
-        const groupedData = [];
-        const uniqueDates = [...new Set(rawEvents.map(e => e.date))];
-
-        uniqueDates.forEach(date => {
-            if(date) {
-                groupedData.push({
-                    date: date,
-                    events: rawEvents.filter(e => e.date === date)
-                });
-            }
+            groups[event.date].push(event);
         });
-
-        return groupedData;
+        
+        // Convert to array format expected by renderer
+        return Object.keys(groups).map(date => {
+            return {
+                date: date,
+                events: groups[date]
+            };
+        });
     }
 
     // --- EVENT LISTENERS ---
@@ -139,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const isFav = favorites.includes(event.title);
             const isLive = checkIsLive(allData[currentDayIndex].date, event.time);
             
-            // KEY CHANGE: Check if description OR link exists
             const hasDetails = (event.description && event.description !== "") || (event.link && event.link !== "");
             const uniqueId = `event-${index}`;
 
@@ -162,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
             } else {
-                // If no details, change cursor to default
                 card.style.cursor = "default";
             }
             
