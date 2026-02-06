@@ -85,14 +85,14 @@
         "time": "18:00",
         "end_time": "19:00",
         "venue": "Foyer",
-        "title": "NYJC",
+        "title": "Joe Nobel",
         "description": "The National Youth Jazz Collective presents the next generation of UK jazz talent in a collaborative performance.",
         "link": ""
     },
     {
         "date": "Thursday 12th February",
         "time": "18:00",
-        "end_time": "19:00",
+        "end_time": "19:30",
         "venue": "EJC",
         "title": "Indo Jazz Fusion",
         "description": "A mesmerizing synthesis of Indian classical ragas and Western jazz improvisation, creating a unique cross-cultural soundscape.",
@@ -200,7 +200,7 @@
     {
         "date": "Friday 13th February",
         "time": "18:00",
-        "end_time": "19:00",
+        "end_time": "19:30",
         "venue": "Recital Hall",
         "title": "TDE Promo - Olie Brice Quartet",
         "description": "Avant-garde and improvised music at its best. Featuring Alexander Hawkins (piano), Rachel Musson (tenor sax), Olie Brice (bass), and Will Glaser (drums).",
@@ -211,14 +211,14 @@
         "time": "18:00",
         "end_time": "19:00",
         "venue": "Foyer",
-        "title": "RBC Juniors",
+        "title": "RBC Youth Jazz",
         "description": "The Junior Conservatoire jazz ensemble showcases the stars of tomorrow.",
         "link": ""
     },
     {
         "date": "Friday 13th February",
         "time": "18:30",
-        "end_time": "19:30",
+        "end_time": "20:00",
         "venue": "EJC",
         "title": "Digbeth Jam",
         "description": "The festival's signature jam session. A chance for students, staff, and guests to share the stage in a spontaneous celebration of jazz.",
