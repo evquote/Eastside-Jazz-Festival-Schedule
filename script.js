@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Set to TRUE to test the "Live Now" feature (Simulating Feb 12th 2026)
     // Set to FALSE for the actual festival
-    const SIMULATE_FESTIVAL = "TRUE"; 
+    const SIMULATE_FESTIVAL = false; 
     const SIMULATED_DATE = "2026-02-12"; 
     const SIMULATED_TIME = "14:15";      
 
