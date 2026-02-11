@@ -302,3 +302,76 @@ footer { text-align: center; padding: 40px; color: #555; font-size: 0.8rem; }
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* --- Cookie Banner --- */
+.cookie-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    background-color: #1e1e1e; /* Card BG */
+    border: 1px solid #d4af37; /* Gold Border */
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cookie-banner.hidden {
+    display: none;
+}
+
+.cookie-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.cookie-content p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #ccc;
+    flex: 1;
+}
+
+.cookie-content a {
+    color: #d4af37;
+    text-decoration: underline;
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.cookie-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cookie-btn.accept {
+    background-color: #d4af37; /* Gold */
+    color: #121212;
+}
+
+.cookie-btn.decline {
+    background-color: transparent;
+    border: 1px solid #666;
+    color: #aaa;
+}
+
+.cookie-btn:hover {
+    transform: translateY(-2px);
+}
