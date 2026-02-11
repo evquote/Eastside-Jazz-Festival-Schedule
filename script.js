@@ -217,3 +217,54 @@ document.addEventListener('DOMContentLoaded', () => {
         return now >= startDate && now < endDate;
     }
 });
+// --- COOKIE CONSENT & ANALYTICS LOGIC ---
+const GA_MEASUREMENT_ID = "G-T6XBMPFRH9"; // <--- PASTE YOUR ID HERE
+
+const cookieBanner = document.getElementById('cookie-banner');
+const acceptBtn = document.getElementById('cookie-accept');
+const declineBtn = document.getElementById('cookie-decline');
+
+// 1. Check if user has already chosen
+if (!localStorage.getItem('jazzFestConsent')) {
+    // No choice made yet -> Show Banner
+    if(cookieBanner) cookieBanner.classList.remove('hidden');
+} else {
+    // Choice made previously
+    if (localStorage.getItem('jazzFestConsent') === 'granted') {
+        loadGoogleAnalytics();
+    }
+}
+
+// 2. Handle Accept
+if(acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+        localStorage.setItem('jazzFestConsent', 'granted');
+        cookieBanner.classList.add('hidden');
+        loadGoogleAnalytics();
+    });
+}
+
+// 3. Handle Decline
+if(declineBtn) {
+    declineBtn.addEventListener('click', () => {
+        localStorage.setItem('jazzFestConsent', 'denied');
+        cookieBanner.classList.add('hidden');
+    });
+}
+
+// 4. Function to Load Google Analytics (Only runs if accepted)
+function loadGoogleAnalytics() {
+    // Create script tag
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+
+    // Initialize DataLayer
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID);
+    
+    console.log("GA Loaded");
+}
